@@ -1,6 +1,0 @@
-*** New log file created ***
-Raw data logging enabled = False
-Motus-1 Pipe Server version: 1.0.6
-Motus-1 Pipe Server started at 10:15:40 PM
-VMUV_TCP version: 1.1.1
-SocketWrapper.cs: StartServer: TCP Server successfully started on port 11069
