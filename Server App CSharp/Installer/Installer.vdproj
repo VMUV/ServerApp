@@ -15,50 +15,50 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_0B973DEABFC68D45AAE2A8CAA5BB32A7"
-        "OwnerKey" = "8:_D49EAF115432444AB702171685ECEA1B"
+        "MsmKey" = "8:_44A9D41202206D99B387AD0C32DC5A1C"
+        "OwnerKey" = "8:_FA627BC99FC54C829114E0D358B9C55E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_17A8A9412407C70A2FEDBEE9759E6DFE"
-        "OwnerKey" = "8:_D49EAF115432444AB702171685ECEA1B"
+        "MsmKey" = "8:_95464171C5C030C9803AD53C13B6C33C"
+        "OwnerKey" = "8:_FA627BC99FC54C829114E0D358B9C55E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_17A8A9412407C70A2FEDBEE9759E6DFE"
-        "OwnerKey" = "8:_0B973DEABFC68D45AAE2A8CAA5BB32A7"
+        "MsmKey" = "8:_95464171C5C030C9803AD53C13B6C33C"
+        "OwnerKey" = "8:_44A9D41202206D99B387AD0C32DC5A1C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_B8EC588C8D84CFAAD9EEF1CAB85FE96F"
-        "OwnerKey" = "8:_D49EAF115432444AB702171685ECEA1B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D49EAF115432444AB702171685ECEA1B"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_DBF2A9F68179B450BA866C4C138CB947"
+        "OwnerKey" = "8:_FA627BC99FC54C829114E0D358B9C55E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_EA655939C401B1852BC6BD96C76E26C8"
-        "OwnerKey" = "8:_D49EAF115432444AB702171685ECEA1B"
+        "OwnerKey" = "8:_FA627BC99FC54C829114E0D358B9C55E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FA627BC99FC54C829114E0D358B9C55E"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B8EC588C8D84CFAAD9EEF1CAB85FE96F"
+        "OwnerKey" = "8:_DBF2A9F68179B450BA866C4C138CB947"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D49EAF115432444AB702171685ECEA1B"
+        "OwnerKey" = "8:_FA627BC99FC54C829114E0D358B9C55E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -70,13 +70,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_0B973DEABFC68D45AAE2A8CAA5BB32A7"
+        "OwnerKey" = "8:_44A9D41202206D99B387AD0C32DC5A1C"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_17A8A9412407C70A2FEDBEE9759E6DFE"
+        "OwnerKey" = "8:_95464171C5C030C9803AD53C13B6C33C"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -97,6 +97,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -113,6 +121,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -142,20 +166,20 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0B973DEABFC68D45AAE2A8CAA5BB32A7"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_44A9D41202206D99B387AD0C32DC5A1C"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:VMUV TCP CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:VMUV TCP CSharp _NET_4_6_1, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_0B973DEABFC68D45AAE2A8CAA5BB32A7"
+                    "_44A9D41202206D99B387AD0C32DC5A1C"
                     {
-                    "Name" = "8:VMUV TCP CSharp.DLL"
+                    "Name" = "8:VMUV TCP CSharp _NET_4_6_1.DLL"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:VMUV TCP CSharp.DLL"
+            "SourcePath" = "8:VMUV TCP CSharp _NET_4_6_1.DLL"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4ED3803990A540199E3B9E4D080AD6B3"
@@ -173,20 +197,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_17A8A9412407C70A2FEDBEE9759E6DFE"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_95464171C5C030C9803AD53C13B6C33C"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Trace Logger CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Trace Logger CSharp _NET_4_6_1, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_17A8A9412407C70A2FEDBEE9759E6DFE"
+                    "_95464171C5C030C9803AD53C13B6C33C"
                     {
-                    "Name" = "8:Trace Logger CSharp.DLL"
+                    "Name" = "8:Trace Logger CSharp _NET_4_6_1.DLL"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Trace Logger CSharp.DLL"
+            "SourcePath" = "8:Trace Logger CSharp _NET_4_6_1.DLL"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4ED3803990A540199E3B9E4D080AD6B3"
@@ -204,20 +228,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B8EC588C8D84CFAAD9EEF1CAB85FE96F"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_DBF2A9F68179B450BA866C4C138CB947"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Comms Protocol CSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Comms Protocol CSharp _NET_4_6_1, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_B8EC588C8D84CFAAD9EEF1CAB85FE96F"
+                    "_DBF2A9F68179B450BA866C4C138CB947"
                     {
-                    "Name" = "8:Comms Protocol CSharp.DLL"
+                    "Name" = "8:Comms Protocol CSharp _NET_4_6_1.DLL"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Comms Protocol CSharp.DLL"
+            "SourcePath" = "8:Comms Protocol CSharp _NET_4_6_1.DLL"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4ED3803990A540199E3B9E4D080AD6B3"
@@ -233,37 +257,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D49EAF115432444AB702171685ECEA1B"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Server App CSharp, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_D49EAF115432444AB702171685ECEA1B"
-                    {
-                    "Name" = "8:Server App CSharp.exe"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\Server App CSharp\\bin\\Release\\Server App CSharp.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_4ED3803990A540199E3B9E4D080AD6B3"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EA655939C401B1852BC6BD96C76E26C8"
@@ -295,6 +288,37 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FA627BC99FC54C829114E0D358B9C55E"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Motus Hardware Interface, Version=1.0.0.8, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_FA627BC99FC54C829114E0D358B9C55E"
+                    {
+                    "Name" = "8:Motus Hardware Interface.exe"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\Server App CSharp\\bin\\Release\\Motus Hardware Interface.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_4ED3803990A540199E3B9E4D080AD6B3"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -353,15 +377,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Motus"
-        "ProductCode" = "8:{39F3267A-2423-4303-B473-357E13ACFCB0}"
-        "PackageCode" = "8:{B3BB019F-F9FC-4422-BA17-83856F733E6C}"
+        "ProductCode" = "8:{718E047E-694D-4251-AE73-74A8109FCA6D}"
+        "PackageCode" = "8:{5F486387-35A2-4F9F-99F7-AFB19203BC1B}"
         "UpgradeCode" = "8:{10B62C46-F921-4397-A3C6-ED34A76E8469}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:VMUV LLC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
