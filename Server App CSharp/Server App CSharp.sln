@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server App CSharp", "Server
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{208FCBC5-D827-431A-A7D5-12F6AF84859C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comms Protocol CSharp", "..\..\CommsProtocol\Comms Protocol CSharp\Comms Protocol CSharp\Comms Protocol CSharp.csproj", "{00F7359A-0CC6-4B03-A098-522E2EEA97DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{9D1E2327-898B-4116-906B-AE74EA0BDA61}.Release|Any CPU.Build.0 = Release|Any CPU
 		{208FCBC5-D827-431A-A7D5-12F6AF84859C}.Debug|Any CPU.ActiveCfg = Debug
 		{208FCBC5-D827-431A-A7D5-12F6AF84859C}.Release|Any CPU.ActiveCfg = Release
+		{00F7359A-0CC6-4B03-A098-522E2EEA97DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00F7359A-0CC6-4B03-A098-522E2EEA97DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00F7359A-0CC6-4B03-A098-522E2EEA97DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00F7359A-0CC6-4B03-A098-522E2EEA97DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
