@@ -84,7 +84,6 @@
   <ItemGroup>
     <Compile Include="BTClient.cs" />
     <Compile Include="BTWorker.cs" />
-    <Compile Include="DataStorageTable.cs" />
     <Compile Include="HIDInterface.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="MotusWorker.cs" />

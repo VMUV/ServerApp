@@ -9,9 +9,9 @@ namespace Server_App_CSharp
 {
     class Program
     {
-        private static string version = "1.0.1.0";
-        private static SocketWrapper tcpServer = new SocketWrapper(Configuration.server);
-        private static DataQueue queue = new DataQueue();
+        private static string _version = "1.0.1.0";
+        private static SocketWrapper _tcpServer = new SocketWrapper(Configuration.server);
+        private static DataQueue _queue = new DataQueue();
 
         static void Main(string[] args)
         {
@@ -21,27 +21,27 @@ namespace Server_App_CSharp
                 mutex = new Mutex(false, "3fb63999603824ebd0b416f74e96505023cfcd41");
                 if (mutex.WaitOne(0, false))
                 {
-                    Initialize();
-                    tcpServer.StartServer();
-
                     BTWorker bTWorker = new BTWorker();
-
                     MotusWorker motusWorker = new MotusWorker();
+
+                    Initialize();
+                    _tcpServer.StartServer();
                     motusWorker.Run();
 
                     while (true)
                     {
                         if (!bTWorker.IsRunning)
                             bTWorker.Run();
-                        if (bTWorker.GetData(queue) > 0)
-                        {
-                            byte[] tmp = new byte[2046];
-                            int len = queue.GetStreamable(tmp);
-                            Console.WriteLine("Got " + len + " bytes!\n" + tmp.ToString());
-                        }
+                        bTWorker.GetData(_queue);
+                        HIDInterface.GetData(_queue);
 
-                        Motus_1_RawDataPacket packet = DataStorageTable.GetCurrentMotus1RawData();
-                        tcpServer.ServerSetTxData(packet.Payload, (byte)packet.Type);
+                        // debug stuff
+                        byte[] tmp = new byte[2056];
+                        int numBytes = _queue.GetStreamable(tmp);
+                        if (numBytes > 0)
+                            Console.WriteLine("Got " + numBytes + " bytes!");
+
+                        //_tcpServer.ServerSetTxData(packet.Payload, (byte)packet.Type);
                         ServiceLoggingRequests();
                         Thread.Sleep(2);
                     }
@@ -63,7 +63,7 @@ namespace Server_App_CSharp
         {
             string startTime = DateTime.Now.ToString("h:mm:ss tt");
             Logger.CreateLogFile();
-            Logger.LogMessage("Motus-1 Pipe Server version: " + version);
+            Logger.LogMessage("Motus-1 Pipe Server version: " + _version);
             Logger.LogMessage("Motus-1 Pipe Server started at " + startTime);
             Logger.LogMessage("VMUV_TCP version: " + SocketWrapper.version);
         }
@@ -87,9 +87,9 @@ namespace Server_App_CSharp
                 Logger.LogMessage(strMsg);
             }
 
-            if (tcpServer.HasTraceMessages())
+            if (_tcpServer.HasTraceMessages())
             {
-                TraceLoggerMessage[] msgs = tcpServer.GetTraceMessages();
+                TraceLoggerMessage[] msgs = _tcpServer.GetTraceMessages();
                 string[] strMsg = new string[msgs.Length];
 
                 for (int i = 0; i < msgs.Length; i++)
