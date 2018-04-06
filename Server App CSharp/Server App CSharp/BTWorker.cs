@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Comms_Protocol_CSharp;
 
@@ -6,8 +7,27 @@ namespace Server_App_CSharp
 {
     class BTWorker
     {
-        public DataQueue btQueue = new DataQueue();
+        private DataQueue _btQueue = new DataQueue();
         private bool _isRunning = false;
+        private Object _lock = new Object();
+
+        public int GetData(DataQueue queue)
+        {
+            int numPacketsQueued = 0;
+
+            lock (_lock)
+            {
+                while (!_btQueue.IsEmpty())
+                {
+                    if (queue.Add(_btQueue.Get()))
+                        numPacketsQueued++;
+                    else
+                        break;
+                }
+            }
+
+            return numPacketsQueued;
+        }
 
         public bool IsRunning
         {
@@ -37,8 +57,15 @@ namespace Server_App_CSharp
                 }
                 else
                 {
-                    while (!client.dataQueue.IsEmpty())
-                        btQueue.Add(client.dataQueue.Get());
+                    if (client.streamDataLen > 0)
+                    {
+                        lock (_lock)
+                        {
+                            _btQueue.ParseStreamable(client.streamData, client.streamDataLen);
+                            client.streamDataLen = 0;
+                        }
+                    }
+
                     Thread.Sleep(10);
                 }
             }

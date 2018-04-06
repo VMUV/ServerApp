@@ -12,41 +12,6 @@ namespace Server_App_CSharp
         private HardwareStates hwState = HardwareStates.find_device;
         private int devicePollCounter = 0;
 
-        private void Motus1HardwareMain()
-        {
-            switch (hwState)
-            {
-                case HardwareStates.find_device:
-                    Thread.Sleep(1000);
-                    FindDevice();
-
-                    if (HIDInterface.DeviceIsPresent())
-                        hwState = HardwareStates.enumerate_device;
-                    break;
-                case HardwareStates.enumerate_device:
-                    EnumerateDevice();
-
-                    if (HIDInterface.DeviceIsEnumerated())
-                        hwState = HardwareStates.device_enumerated;
-                    else
-                        hwState = HardwareStates.find_device;
-                    break;
-                case HardwareStates.device_enumerated:
-                    if (devicePollCounter++ > 1000)
-                    {
-                        devicePollCounter = 0;
-                        PollDevice();
-                    }
-
-                    if (!HIDInterface.DeviceIsPresent())
-                    {
-                        HIDInterface.DisposeDevice();
-                        hwState = HardwareStates.find_device;
-                    }
-                    break;
-            }
-        }
-
         private void FindDevice()
         {
             Task.Run(async () =>
@@ -75,7 +40,38 @@ namespace Server_App_CSharp
         {
             while (true)
             {
-                Motus1HardwareMain();
+                switch (hwState)
+                {
+                    case HardwareStates.find_device:
+                        Thread.Sleep(1000);
+                        FindDevice();
+
+                        if (HIDInterface.DeviceIsPresent())
+                            hwState = HardwareStates.enumerate_device;
+                        break;
+                    case HardwareStates.enumerate_device:
+                        EnumerateDevice();
+
+                        if (HIDInterface.DeviceIsEnumerated())
+                            hwState = HardwareStates.device_enumerated;
+                        else
+                            hwState = HardwareStates.find_device;
+                        break;
+                    case HardwareStates.device_enumerated:
+                        if (devicePollCounter++ > 1000)
+                        {
+                            devicePollCounter = 0;
+                            PollDevice();
+                        }
+
+                        if (!HIDInterface.DeviceIsPresent())
+                        {
+                            HIDInterface.DisposeDevice();
+                            hwState = HardwareStates.find_device;
+                        }
+                        break;
+                }
+
                 Thread.Sleep(2);
             }
         }

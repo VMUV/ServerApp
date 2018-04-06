@@ -11,6 +11,7 @@ namespace Server_App_CSharp
     {
         private static string version = "1.0.1.0";
         private static SocketWrapper tcpServer = new SocketWrapper(Configuration.server);
+        private static DataQueue queue = new DataQueue();
 
         static void Main(string[] args)
         {
@@ -32,10 +33,10 @@ namespace Server_App_CSharp
                     {
                         if (!bTWorker.IsRunning)
                             bTWorker.Run();
-                        if (!bTWorker.btQueue.IsEmpty())
+                        if (bTWorker.GetData(queue) > 0)
                         {
                             byte[] tmp = new byte[2046];
-                            int len = bTWorker.btQueue.GetStreamable(tmp);
+                            int len = queue.GetStreamable(tmp);
                             Console.WriteLine("Got " + len + " bytes!\n" + tmp.ToString());
                         }
 

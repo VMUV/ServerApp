@@ -15,8 +15,10 @@ namespace Server_App_CSharp
         private Guid _service = new Guid("{7A51FDC2-FDDF-4c9b-AFFC-98BCD91BF93B}");
         private BTStates _state = BTStates.start_radio;
         private int _deviceIndex = 0;
-        private byte[] _streamData = new byte[2056];
         private int _timeOutInMs = 0;
+
+        public byte[] streamData = new byte[2056];
+        public int streamDataLen = 0;
         public DataQueue dataQueue = new DataQueue();
 
         private void TimeOutIncrement()
@@ -94,15 +96,9 @@ namespace Server_App_CSharp
             {
                 if (_streamIn.DataAvailable)
                 {
-                    int numBytes = _streamIn.Read(_streamData, 0, _streamData.Length);
-
-                    //Console.WriteLine("Got " + numBytes + " bytes:");
-                    if (numBytes > 0)
-                    {
+                    streamDataLen = _streamIn.Read(streamData, 0, streamData.Length);
+                    if (streamDataLen > 0)
                         _timeOutInMs = 0;
-                        dataQueue.ParseStreamable(_streamData, numBytes);
-                        //Console.WriteLine("Got " + dataQueue.Count + " valid packets");
-                    }
                     else
                         TimeOutIncrement();
                 }
