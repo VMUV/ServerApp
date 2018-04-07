@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Threading;
 using VMUV_TCP_CSharp;
 using Comms_Protocol_CSharp;
@@ -36,12 +35,16 @@ namespace Server_App_CSharp
                         HIDInterface.GetData(_queue);
 
                         // debug stuff
-                        byte[] tmp = new byte[2056];
+                        byte[] tmp = new byte[2048];
                         int numBytes = _queue.GetStreamable(tmp);
                         if (numBytes > 0)
+                        {
                             Console.WriteLine("Got " + numBytes + " bytes!");
+                            byte[] toSend = new byte[numBytes];
+                            Buffer.BlockCopy(tmp, 0, toSend, 0, numBytes);
+                            _tcpServer.ServerSetTxData(toSend);
+                        }
 
-                        //_tcpServer.ServerSetTxData(packet.Payload, (byte)packet.Type);
                         ServiceLoggingRequests();
                         Thread.Sleep(2);
                     }

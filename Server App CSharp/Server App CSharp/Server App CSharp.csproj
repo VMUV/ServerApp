@@ -73,10 +73,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\TraceLogger\Binaries\Trace Logger CSharp _NET_4_6_1.dll</HintPath>
     </Reference>
-    <Reference Include="VMUV TCP CSharp _NET_4_6_1, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\TCP\Binaries\CSharp NET_4_6_1\VMUV TCP CSharp _NET_4_6_1.dll</HintPath>
-    </Reference>
     <Reference Include="Windows">
       <HintPath>runtime\Windows.winmd</HintPath>
     </Reference>
@@ -111,6 +107,10 @@
     <ProjectReference Include="..\..\..\CommsProtocol\Comms Protocol CSharp\Comms Protocol CSharp\Comms Protocol CSharp.csproj">
       <Project>{00f7359a-0cc6-4b03-a098-522e2eea97db}</Project>
       <Name>Comms Protocol CSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\TCP\VMUV TCP CSharp\VMUV TCP CSharp\VMUV TCP CSharp.csproj">
+      <Project>{9e623c9a-5072-41bb-819a-7c1ba442e4a5}</Project>
+      <Name>VMUV TCP CSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

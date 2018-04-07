@@ -60,13 +60,15 @@ namespace Server_App_CSharp
                 if (deviceInfo.Count > 0)
                 {
                     _deviceIsPresent = true;
-                    _hidLogger.QueueMessage(_hidLogger.BuildMessage(_moduleName, methodName, "Motus-1 is present!"));
+                    _hidLogger.QueueMessage(_hidLogger.BuildMessage(_moduleName, methodName, 
+                        "Motus-1 is present!"));
                 }
             }
             catch (Exception e0)
             {
                 string message = "An exception of type " + e0.GetType().ToString() + " occurred." +
-                    " Exception occurred at : " + Environment.StackTrace + ". Exception message is : " + e0.Message;
+                    " Exception occurred at : " + Environment.StackTrace + ". Exception message is : " + 
+                    e0.Message;
                 _hidLogger.QueueMessage(_hidLogger.BuildMessage(_moduleName, methodName, message));
             }
         }
@@ -81,13 +83,15 @@ namespace Server_App_CSharp
                 if (deviceInfo.Count == 0)
                 {
                     _deviceIsPresent = false;
-                    _hidLogger.QueueMessage(_hidLogger.BuildMessage(_moduleName, methodName, "Motus-1 has been disconnected"));
+                    _hidLogger.QueueMessage(_hidLogger.BuildMessage(_moduleName, methodName, 
+                        "Motus-1 has been disconnected"));
                 }
             }
             catch (Exception e0)
             {
                 string message = "An exception of type " + e0.GetType().ToString() + " occurred." +
-                    " Exception occurred at : " + Environment.StackTrace + ". Exception message is : " + e0.Message;
+                    " Exception occurred at : " + Environment.StackTrace + ". Exception message is : " + 
+                    e0.Message;
                 _hidLogger.QueueMessage(_hidLogger.BuildMessage(_moduleName, methodName, message));
             }
         }
@@ -102,24 +106,29 @@ namespace Server_App_CSharp
                 try
                 {
                     var deviceInfo = await DeviceInformation.FindAllAsync(USBSelector.GetSelector());
-                    _device = await HidDevice.FromIdAsync(deviceInfo.ElementAt(0).Id, Windows.Storage.FileAccessMode.ReadWrite);
+                    _device = await HidDevice.FromIdAsync(deviceInfo.ElementAt(0).Id, 
+                        Windows.Storage.FileAccessMode.ReadWrite);
                 }
                 catch (Exception e0)
                 {
                     string message = "An exception of type " + e0.GetType().ToString() + " occurred." +
-                        " Exception occurred at : " + Environment.StackTrace + ". Exception message is : " + e0.Message;
+                        " Exception occurred at : " + Environment.StackTrace + ". Exception message is : " +
+                        e0.Message;
                     _hidLogger.QueueMessage(_hidLogger.BuildMessage(_moduleName, methodName, message));
                 }
 
                 if (_device != null)
                 {
                     _deviceIsEnumerated = true;
-                    _device.InputReportReceived += new TypedEventHandler<HidDevice, HidInputReportReceivedEventArgs>(USBInterruptTransferHandler);
-                    _hidLogger.QueueMessage(_hidLogger.BuildMessage(_moduleName, methodName, "Motus-1 enumeration success!"));
+                    _device.InputReportReceived += new TypedEventHandler<HidDevice, 
+                        HidInputReportReceivedEventArgs>(USBInterruptTransferHandler);
+                    _hidLogger.QueueMessage(_hidLogger.BuildMessage(_moduleName, methodName, 
+                        "Motus-1 enumeration success!"));
                 }
                 else
                 {
-                    _hidLogger.QueueMessage(_hidLogger.BuildMessage(_moduleName, methodName, "Motus-1 enumeration failure."));
+                    _hidLogger.QueueMessage(_hidLogger.BuildMessage(_moduleName, methodName, 
+                        "Motus-1 enumeration failure."));
                 }
             }
         }
