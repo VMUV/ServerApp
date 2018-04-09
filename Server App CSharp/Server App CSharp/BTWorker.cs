@@ -1,76 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using Comms_Protocol_CSharp;
+﻿using System.Threading;
 
 namespace Server_App_CSharp
 {
-    class BTWorker
+    public class BTWorker : SensorInterface
     {
-        private DataQueue _btQueue = new DataQueue();
-        private bool _isRunning = false;
-        private Object _lock = new Object();
-
-        public int GetData(DataQueue queue)
+        public void Start()
         {
-            int numPacketsQueued = 0;
-
-            lock (_lock)
-            {
-                while (!_btQueue.IsEmpty())
-                {
-                    if (queue.Add(_btQueue.Get()))
-                        numPacketsQueued++;
-                    else
-                        break;
-                }
-            }
-
-            return numPacketsQueued;
-        }
-
-        public bool IsRunning
-        {
-            get { return _isRunning; }
-        }
-
-        public void Run()
-        {
-            Thread thread = new Thread(new ThreadStart(WorkerThread));
-            thread.Start();
+            Run(WorkerThread);
         }
 
         private void WorkerThread()
         {
-            _isRunning = true;
-
             BTClient client = new BTClient();
             BTStates state;
             while (true)
             {
                 state = client.RunBTStateMachine();
+
                 if (state == BTStates.disconnected)
                 {
                     client.RunBTStateMachine();
-                    Thread.Sleep(5000);
                     break;
                 }
-                else
-                {
-                    if (client.streamDataLen > 0)
-                    {
-                        lock (_lock)
-                        {
-                            _btQueue.ParseStreamable(client.streamData, client.streamDataLen);
-                            client.streamDataLen = 0;
-                        }
-                    }
 
-                    Thread.Sleep(10);
-                }
+                if (client.HasData)
+                    SetData(client.GetData());
+
+                Thread.Sleep(5);
             }
-
-            _isRunning = false;
         }
     }
 }

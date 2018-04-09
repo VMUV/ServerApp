@@ -39,26 +39,26 @@ namespace Server_App_CSharp
             return rtn;
         }
 
-        public void Run()
+        public ThreadState GetState()
         {
-            Thread _thread = new Thread(new ThreadStart(Worker));
+            ThreadState rtn = ThreadState.Stopped;
+            if (_thread != null)
+                rtn = _thread.ThreadState;
+            return rtn;
+        }
+
+        protected void Run(Action worker)
+        {
+            _thread = new Thread(new ThreadStart(worker));
             _thread.Start();
         }
 
-        private void Worker()
+        protected void SetData(byte[] data)
         {
-            Motus_1_RawDataPacket packet = new Motus_1_RawDataPacket();
             lock (_lock)
             {
-                _queue.Add(packet);
-                while (!_queue.IsEmpty())
-                {
-                    if (!_queue.Add(packet))
-                        break;
-                }
+                _queue.ParseStreamable(data, data.Length);
             }
-
-            //Thread.Sleep(10000);
         }
     }
 }

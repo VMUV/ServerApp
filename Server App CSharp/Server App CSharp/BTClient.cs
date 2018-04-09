@@ -16,14 +16,14 @@ namespace Server_App_CSharp
         private BTStates _state = BTStates.start_radio;
         private int _deviceIndex = 0;
         private int _timeOutInMs = 0;
+        private byte[] _streamData = new byte[2056];
+        private int _streamDataLen = 0;
 
-        public byte[] streamData = new byte[2056];
-        public int streamDataLen = 0;
-        public DataQueue dataQueue = new DataQueue();
+        public bool HasData { get; set; }
 
         private void TimeOutIncrement()
         {
-            _timeOutInMs += 25;
+            _timeOutInMs += 5;
         }
 
         private void LaunchRadio()
@@ -96,9 +96,12 @@ namespace Server_App_CSharp
             {
                 if (_streamIn.DataAvailable)
                 {
-                    streamDataLen = _streamIn.Read(streamData, 0, streamData.Length);
-                    if (streamDataLen > 0)
+                    _streamDataLen = _streamIn.Read(_streamData, 0, _streamData.Length);
+                    if (_streamDataLen > 0)
+                    {
+                        HasData = true;
                         _timeOutInMs = 0;
+                    }
                     else
                         TimeOutIncrement();
                 }
@@ -114,6 +117,15 @@ namespace Server_App_CSharp
             // TODO: variable timeout period?
             if (_timeOutInMs > 5000)
                 _state = BTStates.disconnected;
+        }
+
+        public byte[] GetData()
+        {
+            byte[] rtn = new byte[_streamDataLen];
+            Buffer.BlockCopy(_streamData, 0, rtn, 0, _streamDataLen);
+            _streamDataLen = 0;
+            HasData = false;
+            return rtn;
         }
 
         public BTStates RunBTStateMachine()

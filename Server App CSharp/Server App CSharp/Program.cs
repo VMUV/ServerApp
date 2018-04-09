@@ -20,43 +20,26 @@ namespace Server_App_CSharp
                 mutex = new Mutex(false, "3fb63999603824ebd0b416f74e96505023cfcd41");
                 if (mutex.WaitOne(0, false))
                 {
-                    DataQueue queue = new DataQueue();
-                    SensorInterface sensor1 = new SensorInterface();
-                    SensorInterface sensor2 = new SensorInterface();
-
-                    sensor1.Run();
-                    sensor2.Run();
+                    BTWorker btWorker = new BTWorker();
 
                     while (true)
                     {
-                        if (sensor1.HasData())
+                        if (btWorker.GetState() == ThreadState.Stopped)
+                            btWorker.Start();
+                        else if (btWorker.HasData())
                         {
-                            byte[] data = sensor1.GetData();
-                            queue.ParseStreamable(data, data.Length);
-                            Console.WriteLine("Queued " + queue.Count + " packets!");
-                            byte[] dump = new byte[2048];
-                            queue.GetStreamable(dump);
+                            byte[] data = btWorker.GetData();
+                            _queue.ParseStreamable(data, data.Length);
                         }
 
-                        if (sensor2.HasData())
+                        // debug to console for now
+                        if (!_queue.IsEmpty())
+                            Console.WriteLine("Got " + _queue.Count + "packets!");
+                        while(!_queue.IsEmpty())
                         {
-                            byte[] data = sensor2.GetData();
-                            queue.ParseStreamable(data, data.Length);
-                            Console.WriteLine("Queued " + queue.Count + " packets!");
-                            byte[] dump = new byte[2048];
-                            queue.GetStreamable(dump);
-                        }
-
-                        if (!sensor1.IsAlive())
-                        {
-                            Console.WriteLine("Sensor1 has ended");
-                            sensor1.Run();
-                        }
-
-                        if (!sensor2.IsAlive())
-                        {
-                            Console.WriteLine("Sensor2 has ended");
-                            sensor2.Run();
+                            RotationVectorRawDataPacket packet = new
+                                RotationVectorRawDataPacket(_queue.Get());
+                            Console.WriteLine(packet.ToString());
                         }
                     }
 
