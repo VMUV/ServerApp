@@ -20,34 +20,74 @@ namespace Server_App_CSharp
                 mutex = new Mutex(false, "3fb63999603824ebd0b416f74e96505023cfcd41");
                 if (mutex.WaitOne(0, false))
                 {
-                    BTWorker bTWorker = new BTWorker();
-                    MotusWorker motusWorker = new MotusWorker();
+                    DataQueue queue = new DataQueue();
+                    SensorInterface sensor1 = new SensorInterface();
+                    SensorInterface sensor2 = new SensorInterface();
 
-                    Initialize();
-                    _tcpServer.StartServer();
-                    motusWorker.Run();
+                    sensor1.Run();
+                    sensor2.Run();
 
                     while (true)
                     {
-                        if (!bTWorker.IsRunning)
-                            bTWorker.Run();
-                        bTWorker.GetData(_queue);
-                        HIDInterface.GetData(_queue);
-
-                        // debug stuff
-                        byte[] tmp = new byte[2048];
-                        int numBytes = _queue.GetStreamable(tmp);
-                        if (numBytes > 0)
+                        if (sensor1.HasData())
                         {
-                            Console.WriteLine("Got " + numBytes + " bytes!");
-                            byte[] toSend = new byte[numBytes];
-                            Buffer.BlockCopy(tmp, 0, toSend, 0, numBytes);
-                            _tcpServer.ServerSetTxData(toSend);
+                            byte[] data = sensor1.GetData();
+                            queue.ParseStreamable(data, data.Length);
+                            Console.WriteLine("Queued " + queue.Count + " packets!");
+                            byte[] dump = new byte[2048];
+                            queue.GetStreamable(dump);
                         }
 
-                        ServiceLoggingRequests();
-                        Thread.Sleep(2);
+                        if (sensor2.HasData())
+                        {
+                            byte[] data = sensor2.GetData();
+                            queue.ParseStreamable(data, data.Length);
+                            Console.WriteLine("Queued " + queue.Count + " packets!");
+                            byte[] dump = new byte[2048];
+                            queue.GetStreamable(dump);
+                        }
+
+                        if (!sensor1.IsAlive())
+                        {
+                            Console.WriteLine("Sensor1 has ended");
+                            sensor1.Run();
+                        }
+
+                        if (!sensor2.IsAlive())
+                        {
+                            Console.WriteLine("Sensor2 has ended");
+                            sensor2.Run();
+                        }
                     }
+
+                    //BTWorker bTWorker = new BTWorker();
+                    //MotusWorker motusWorker = new MotusWorker();
+
+                    //Initialize();
+                    //_tcpServer.StartServer();
+                    //motusWorker.Run();
+
+                    //while (true)
+                    //{
+                    //    if (!bTWorker.IsRunning)
+                    //        bTWorker.Run();
+                    //    bTWorker.GetData(_queue);
+                    //    HIDInterface.GetData(_queue);
+
+                    //    // debug stuff
+                    //    byte[] tmp = new byte[2048];
+                    //    int numBytes = _queue.GetStreamable(tmp);
+                    //    if (numBytes > 0)
+                    //    {
+                    //        Console.WriteLine("Got " + numBytes + " bytes!");
+                    //        byte[] toSend = new byte[numBytes];
+                    //        Buffer.BlockCopy(tmp, 0, toSend, 0, numBytes);
+                    //        _tcpServer.ServerSetTxData(toSend);
+                    //    }
+
+                    //    ServiceLoggingRequests();
+                    //    Thread.Sleep(2);
+                    //}
                 }       
             }
             catch (Exception)
