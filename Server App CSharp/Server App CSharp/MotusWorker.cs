@@ -7,16 +7,17 @@ using System.Threading;
 
 namespace Server_App_CSharp
 {
-    class MotusWorker
+    class MotusWorker : SensorInterface
     {
-        private HardwareStates hwState = HardwareStates.find_device;
-        private int devicePollCounter = 0;
+        private HardwareStates _hwState = HardwareStates.find_device;
+        private int _devicePollCounter = 0;
+        private HIDInterface _hidInterface = new HIDInterface();
 
         private void FindDevice()
         {
             Task.Run(async () =>
             {
-                await HIDInterface.FindDevice();
+                await _hidInterface.FindDevice();
             }).GetAwaiter().GetResult();
         }
 
@@ -24,7 +25,7 @@ namespace Server_App_CSharp
         {
             Task.Run(async () =>
             {
-                await HIDInterface.PollDevice();
+                await _hidInterface.PollDevice();
             }).GetAwaiter().GetResult();
         }
 
@@ -32,7 +33,7 @@ namespace Server_App_CSharp
         {
             Task.Run(async () =>
             {
-                await HIDInterface.EnumerateDevice();
+                await _hidInterface.EnumerateDevice();
             }).GetAwaiter().GetResult();
         }
 
@@ -40,46 +41,48 @@ namespace Server_App_CSharp
         {
             while (true)
             {
-                switch (hwState)
+                switch (_hwState)
                 {
                     case HardwareStates.find_device:
                         Thread.Sleep(1000);
                         FindDevice();
 
-                        if (HIDInterface.DeviceIsPresent())
-                            hwState = HardwareStates.enumerate_device;
+                        if (_hidInterface.DeviceIsPresent())
+                            _hwState = HardwareStates.enumerate_device;
                         break;
                     case HardwareStates.enumerate_device:
                         EnumerateDevice();
 
-                        if (HIDInterface.DeviceIsEnumerated())
-                            hwState = HardwareStates.device_enumerated;
+                        if (_hidInterface.DeviceIsEnumerated())
+                            _hwState = HardwareStates.device_enumerated;
                         else
-                            hwState = HardwareStates.find_device;
+                            _hwState = HardwareStates.find_device;
                         break;
                     case HardwareStates.device_enumerated:
-                        if (devicePollCounter++ > 1000)
+                        if (_devicePollCounter++ > 1000)
                         {
-                            devicePollCounter = 0;
+                            _devicePollCounter = 0;
                             PollDevice();
                         }
 
-                        if (!HIDInterface.DeviceIsPresent())
+                        if (!_hidInterface.DeviceIsPresent())
                         {
-                            HIDInterface.DisposeDevice();
-                            hwState = HardwareStates.find_device;
+                            _hidInterface.DisposeDevice();
+                            _hwState = HardwareStates.find_device;
                         }
                         break;
                 }
+
+                if (_hidInterface.HasData())
+                    SetData(_hidInterface.GetData());
 
                 Thread.Sleep(2);
             }
         }
 
-        public void Run()
+        public void Start()
         {
-            Thread thread = new Thread(new ThreadStart(WorkerThread));
-            thread.Start();
+            Run(WorkerThread);
         }
     }
 

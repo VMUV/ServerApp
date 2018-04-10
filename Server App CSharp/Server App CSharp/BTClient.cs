@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using InTheHand.Net;
 using InTheHand.Net.Sockets;
 using InTheHand.Net.Bluetooth;
-using Comms_Protocol_CSharp;
 
 namespace Server_App_CSharp
 {

@@ -10,44 +10,25 @@ using Trace_Logger_CSharp;
 
 namespace Server_App_CSharp
 {
-    static class HIDInterface
+    public class HIDInterface : SensorInterface
     {
-        private static bool _deviceIsEnumerated = false;
-        private static bool _deviceIsPresent = false;
-        private static HidDevice _device = null;
-        private static TraceLogger _hidLogger = new TraceLogger(128);
-        private static string _moduleName = "HIDInterface.cs";
-        private static DataQueue _dataQueue = new DataQueue();
-        private static Object _lock = new object();
+        private  bool _deviceIsEnumerated = false;
+        private  bool _deviceIsPresent = false;
+        private  HidDevice _device = null;
+        private  TraceLogger _hidLogger = new TraceLogger(128);
+        private  string _moduleName = "HIDInterface.cs";
 
-        public static int GetData(DataQueue queue)
-        {
-            int numPackets = 0;
-            lock (_lock)
-            {
-                while (!_dataQueue.IsEmpty())
-                {
-                    if (queue.Add(_dataQueue.Get()))
-                        numPackets++;
-                    else
-                        break;
-                }
-            }
-
-            return numPackets;
-        }
-
-        public static bool DeviceIsEnumerated()
+        public  bool DeviceIsEnumerated()
         {
             return _deviceIsEnumerated;
         }
 
-        public static bool DeviceIsPresent()
+        public  bool DeviceIsPresent()
         {
             return _deviceIsPresent;
         }
 
-        public static async Task FindDevice()
+        public  async Task FindDevice()
         {
             string methodName = "FindDevice";
 
@@ -73,7 +54,7 @@ namespace Server_App_CSharp
             }
         }
 
-        public static async Task PollDevice()
+        public  async Task PollDevice()
         {
             string methodName = "PollDevice";
             try
@@ -96,7 +77,7 @@ namespace Server_App_CSharp
             }
         }
 
-        public static async Task EnumerateDevice()
+        public  async Task EnumerateDevice()
         {
             string methodName = "EnumerateDevice";
             _deviceIsEnumerated = false;
@@ -133,13 +114,13 @@ namespace Server_App_CSharp
             }
         }
 
-        public static void DisposeDevice()
+        public  void DisposeDevice()
         {
             _deviceIsEnumerated = false;
             _device.Dispose();
         }
 
-        private static void GetHidReport(HidInputReportReceivedEventArgs args)
+        private  void GetHidReport(HidInputReportReceivedEventArgs args)
         {
             // For now there is only one data type
             string methodName = "GetHidReport";
@@ -156,11 +137,9 @@ namespace Server_App_CSharp
                 for (int i = 0; i < parsed.Length; i++)
                     parsed[i] = bytes[i + 1];
                 packet.Serialize(parsed);
-
-                lock (_lock)
-                {
-                    _dataQueue.Add(packet);
-                }
+                byte[] stream = new byte[packet.ExpectedLen + DataPacket.NumOverHeadBytes];
+                packet.SerializeToStream(stream, 0);
+                SetData(stream);
             }
             catch (ArgumentException e0)
             {
@@ -176,28 +155,28 @@ namespace Server_App_CSharp
             }
         }
 
-        private static void USBInterruptTransferHandler(HidDevice sender, 
+        private  void USBInterruptTransferHandler(HidDevice sender, 
             HidInputReportReceivedEventArgs args)
         {
             GetHidReport(args);
-            if (Logger.IsLoggingRawData())
-            {
-                lock (_lock)
-                {
-                    DataPacket p = _dataQueue.Get();
-                    _dataQueue.Add(p);
-                    Motus_1_RawDataPacket packet = new Motus_1_RawDataPacket(p);
-                    Logger.LogRawData(packet.ToString());
-                }
-            }
+            //if (Logger.IsLoggingRawData())
+            //{
+            //    lock (_lock)
+            //    {
+            //        DataPacket p = _dataQueue.Get();
+            //        _dataQueue.Add(p);
+            //        Motus_1_RawDataPacket packet = new Motus_1_RawDataPacket(p);
+            //        Logger.LogRawData(packet.ToString());
+            //    }
+            //}
         }
 
-        public static TraceLoggerMessage[] GetTraceMessages()
+        public  TraceLoggerMessage[] GetTraceMessages()
         {
             return _hidLogger.GetAllMessages();
         }
 
-        public static bool HasTraceMessages()
+        public  bool HasTraceMessages()
         {
             return _hidLogger.HasMessages();
         }

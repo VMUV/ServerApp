@@ -21,6 +21,7 @@ namespace Server_App_CSharp
                 if (mutex.WaitOne(0, false))
                 {
                     BTWorker btWorker = new BTWorker();
+                    MotusWorker motusWorker = new MotusWorker();
 
                     while (true)
                     {
@@ -32,14 +33,31 @@ namespace Server_App_CSharp
                             _queue.ParseStreamable(data, data.Length);
                         }
 
+                        if (motusWorker.GetState() == ThreadState.Stopped)
+                            motusWorker.Start();
+                        else if (motusWorker.HasData())
+                        {
+                            byte[] data = motusWorker.GetData();
+                            _queue.ParseStreamable(data, data.Length);
+                        }
+
                         // debug to console for now
                         if (!_queue.IsEmpty())
                             Console.WriteLine("Got " + _queue.Count + "packets!");
                         while(!_queue.IsEmpty())
                         {
-                            RotationVectorRawDataPacket packet = new
-                                RotationVectorRawDataPacket(_queue.Get());
-                            Console.WriteLine(packet.ToString());
+                            DataPacket packet = _queue.Get();
+                            switch (packet.Type)
+                            {
+                                case ValidPacketTypes.motus_1_raw_data_packet:
+                                    Motus_1_RawDataPacket pk = new Motus_1_RawDataPacket(packet);
+                                    Console.WriteLine(pk.ToString());
+                                    break;
+                                case ValidPacketTypes.rotation_vector_raw_data_packet:
+                                    RotationVectorRawDataPacket bj = new RotationVectorRawDataPacket(packet);
+                                    Console.WriteLine(bj.ToString());
+                                    break;
+                            }
                         }
                     }
 
@@ -102,27 +120,27 @@ namespace Server_App_CSharp
 
         static void ServiceLoggingRequests()
         {
-            if (HIDInterface.HasTraceMessages())
-            {
-                TraceLoggerMessage[] msgs = HIDInterface.GetTraceMessages();
-                string[] strMsg = new string[msgs.Length];
+            //if (HIDInterface.HasTraceMessages())
+            //{
+            //    TraceLoggerMessage[] msgs = HIDInterface.GetTraceMessages();
+            //    string[] strMsg = new string[msgs.Length];
 
-                for (int i = 0; i < msgs.Length; i++)
-                    strMsg[i] = TraceLogger.TraceLoggerMessageToString(msgs[i]);
+            //    for (int i = 0; i < msgs.Length; i++)
+            //        strMsg[i] = TraceLogger.TraceLoggerMessageToString(msgs[i]);
 
-                Logger.LogMessage(strMsg);
-            }
+            //    Logger.LogMessage(strMsg);
+            //}
 
-            if (_tcpServer.HasTraceMessages())
-            {
-                TraceLoggerMessage[] msgs = _tcpServer.GetTraceMessages();
-                string[] strMsg = new string[msgs.Length];
+            //if (_tcpServer.HasTraceMessages())
+            //{
+            //    TraceLoggerMessage[] msgs = _tcpServer.GetTraceMessages();
+            //    string[] strMsg = new string[msgs.Length];
 
-                for (int i = 0; i < msgs.Length; i++)
-                    strMsg[i] = TraceLogger.TraceLoggerMessageToString(msgs[i]);
+            //    for (int i = 0; i < msgs.Length; i++)
+            //        strMsg[i] = TraceLogger.TraceLoggerMessageToString(msgs[i]);
 
-                Logger.LogMessage(strMsg);
-            }
+            //    Logger.LogMessage(strMsg);
+            //}
         }
     }
 }
