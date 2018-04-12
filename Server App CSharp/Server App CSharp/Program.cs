@@ -9,7 +9,6 @@ namespace Server_App_CSharp
     class Program
     {
         private static string _version = "1.0.1.0";
-        private static SocketWrapper _tcpServer = new SocketWrapper(Configuration.server);
         private static DataQueue _queue = new DataQueue();
 
         static void Main(string[] args)
@@ -22,6 +21,9 @@ namespace Server_App_CSharp
                 {
                     BTWorker btWorker = new BTWorker();
                     MotusWorker motusWorker = new MotusWorker();
+                    SocketWrapper tcpServer = new SocketWrapper(Configuration.server);
+
+                    tcpServer.StartServer();
 
                     while (true)
                     {
@@ -43,52 +45,12 @@ namespace Server_App_CSharp
 
                         // debug to console for now
                         if (!_queue.IsEmpty())
-                            Console.WriteLine("Got " + _queue.Count + "packets!");
-                        while(!_queue.IsEmpty())
                         {
-                            DataPacket packet = _queue.Get();
-                            switch (packet.Type)
-                            {
-                                case ValidPacketTypes.motus_1_raw_data_packet:
-                                    Motus_1_RawDataPacket pk = new Motus_1_RawDataPacket(packet);
-                                    Console.WriteLine(pk.ToString());
-                                    break;
-                                case ValidPacketTypes.rotation_vector_raw_data_packet:
-                                    RotationVectorRawDataPacket bj = new RotationVectorRawDataPacket(packet);
-                                    Console.WriteLine(bj.ToString());
-                                    break;
-                            }
+                            Console.WriteLine("Got " + _queue.Count + "packets!");
+                            tcpServer.ServerSetTxData(_queue);
+                            _queue.Flush();
                         }
                     }
-
-                    //BTWorker bTWorker = new BTWorker();
-                    //MotusWorker motusWorker = new MotusWorker();
-
-                    //Initialize();
-                    //_tcpServer.StartServer();
-                    //motusWorker.Run();
-
-                    //while (true)
-                    //{
-                    //    if (!bTWorker.IsRunning)
-                    //        bTWorker.Run();
-                    //    bTWorker.GetData(_queue);
-                    //    HIDInterface.GetData(_queue);
-
-                    //    // debug stuff
-                    //    byte[] tmp = new byte[2048];
-                    //    int numBytes = _queue.GetStreamable(tmp);
-                    //    if (numBytes > 0)
-                    //    {
-                    //        Console.WriteLine("Got " + numBytes + " bytes!");
-                    //        byte[] toSend = new byte[numBytes];
-                    //        Buffer.BlockCopy(tmp, 0, toSend, 0, numBytes);
-                    //        _tcpServer.ServerSetTxData(toSend);
-                    //    }
-
-                    //    ServiceLoggingRequests();
-                    //    Thread.Sleep(2);
-                    //}
                 }       
             }
             catch (Exception)
