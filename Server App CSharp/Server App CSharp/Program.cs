@@ -30,26 +30,15 @@ namespace Server_App_CSharp
                         if (btWorker.GetState() == ThreadState.Stopped)
                             btWorker.Start();
                         else if (btWorker.HasData())
-                        {
-                            byte[] data = btWorker.GetData();
-                            _queue.ParseStreamable(data, data.Length);
-                        }
+                            btWorker.GetData(_queue);
 
                         if (motusWorker.GetState() == ThreadState.Stopped)
                             motusWorker.Start();
                         else if (motusWorker.HasData())
-                        {
-                            byte[] data = motusWorker.GetData();
-                            _queue.ParseStreamable(data, data.Length);
-                        }
+                            motusWorker.GetData(_queue);
 
-                        // debug to console for now
                         if (!_queue.IsEmpty())
-                        {
-                            Console.WriteLine("Got " + _queue.Count + "packets!");
                             tcpServer.ServerSetTxData(_queue);
-                            _queue.Flush();
-                        }
                     }
                 }       
             }
