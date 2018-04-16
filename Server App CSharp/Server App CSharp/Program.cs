@@ -41,6 +41,8 @@ namespace Server_App_CSharp
 
                         if (!_queue.IsEmpty())
                             tcpServer.ServerSetTxData(_queue);
+
+                        Thread.Sleep(4);
                     }
                 }       
             }
