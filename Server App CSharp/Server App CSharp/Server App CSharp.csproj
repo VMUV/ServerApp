@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{9D1E2327-898B-4116-906B-AE74EA0BDA61}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Server_App_CSharp</RootNamespace>
     <AssemblyName>Motus Hardware Interface</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -54,9 +54,11 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Comms Protocol CSharp _NET_4_6_1, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Comms Protocol CSharp _NET_4_6_1">
       <HintPath>..\..\..\CommsProtocol\Binaries\Comms Protocol CSharp _NET_4_6_1.dll</HintPath>
+    </Reference>
+    <Reference Include="InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL">
+      <HintPath>..\packages\32feet.NET.3.5.0.0\lib\net\InTheHand.Net.Personal.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -74,24 +76,28 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\TraceLogger\Binaries\Trace Logger CSharp _NET_4_6_1.dll</HintPath>
     </Reference>
-    <Reference Include="VMUV TCP CSharp _NET_4_6_1, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="VMUV TCP CSharp _NET_4_6_1, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\TCP\Binaries\CSharp NET_4_6_1\VMUV TCP CSharp _NET_4_6_1.dll</HintPath>
+      <HintPath>..\..\..\TCP\Binaries\VMUV TCP CSharp _NET_4_6_1.dll</HintPath>
     </Reference>
     <Reference Include="Windows">
       <HintPath>runtime\Windows.winmd</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataStorageTable.cs" />
+    <Compile Include="BTClient.cs" />
+    <Compile Include="BTWorker.cs" />
     <Compile Include="HIDInterface.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Loggable.cs" />
+    <Compile Include="MotusWorker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SensorInterface.cs" />
     <Compile Include="USBSelector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">

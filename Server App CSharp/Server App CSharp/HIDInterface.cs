@@ -6,33 +6,28 @@ using Windows.Devices.HumanInterfaceDevice;
 using Windows.Foundation;
 using Windows.Storage.Streams;
 using Comms_Protocol_CSharp;
-using Trace_Logger_CSharp;
 
 namespace Server_App_CSharp
 {
-    static class HIDInterface
+    public class HIDInterface : SensorInterface
     {
-        private static bool deviceIsEnumerated = false;
-        private static bool deviceIsPresent = false;
-        private static HidDevice device = null;
-        private static TraceLogger hidLogger = new TraceLogger(128);
-        private static string moduleName = "HIDInterface.cs";
+        private  bool _deviceIsEnumerated = false;
+        private  bool _deviceIsPresent = false;
+        private  HidDevice _device = null;
 
-        public static bool DeviceIsEnumerated()
+        public  bool DeviceIsEnumerated()
         {
-            return deviceIsEnumerated;
+            return _deviceIsEnumerated;
         }
 
-        public static bool DeviceIsPresent()
+        public  bool DeviceIsPresent()
         {
-            return deviceIsPresent;
+            return _deviceIsPresent;
         }
 
-        public static async Task FindDevice()
+        public  async Task FindDevice()
         {
-            string methodName = "FindDevice";
-
-            deviceIsPresent = false;
+            _deviceIsPresent = false;
 
             try
             {
@@ -40,81 +35,74 @@ namespace Server_App_CSharp
 
                 if (deviceInfo.Count > 0)
                 {
-                    deviceIsPresent = true;
-                    hidLogger.QueueMessage(hidLogger.BuildMessage(moduleName, methodName, "Motus-1 is present!"));
+                    _deviceIsPresent = true;
+                    LogMessage("Motus-1 is present!");
                 }
             }
             catch (Exception e0)
             {
-                string message = "An exception of type " + e0.GetType().ToString() + " occurred." +
-                    " Exception occurred at : " + Environment.StackTrace + ". Exception message is : " + e0.Message;
-                hidLogger.QueueMessage(hidLogger.BuildMessage(moduleName, methodName, message));
+                LogMessage(e0.Message + e0.StackTrace);
             }
         }
 
-        public static async Task PollDevice()
+        public  async Task PollDevice()
         {
-            string methodName = "PollDevice";
             try
             {
                 var deviceInfo = await DeviceInformation.FindAllAsync(USBSelector.GetSelector());
 
                 if (deviceInfo.Count == 0)
                 {
-                    deviceIsPresent = false;
-                    hidLogger.QueueMessage(hidLogger.BuildMessage(moduleName, methodName, "Motus-1 has been disconnected"));
+                    _deviceIsPresent = false;
+                    LogMessage("Motus-1 has been disconnected");
                 }
             }
             catch (Exception e0)
             {
-                string message = "An exception of type " + e0.GetType().ToString() + " occurred." +
-                    " Exception occurred at : " + Environment.StackTrace + ". Exception message is : " + e0.Message;
-                hidLogger.QueueMessage(hidLogger.BuildMessage(moduleName, methodName, message));
+                LogMessage(e0.Message + e0.StackTrace);
             }
         }
 
-        public static async Task EnumerateDevice()
+        public  async Task EnumerateDevice()
         {
-            string methodName = "EnumerateDevice";
-            deviceIsEnumerated = false;
+            _deviceIsEnumerated = false;
 
             if (!DeviceIsEnumerated() && DeviceIsPresent())
             {
                 try
                 {
                     var deviceInfo = await DeviceInformation.FindAllAsync(USBSelector.GetSelector());
-                    device = await HidDevice.FromIdAsync(deviceInfo.ElementAt(0).Id, Windows.Storage.FileAccessMode.ReadWrite);
+                    _device = await HidDevice.FromIdAsync(deviceInfo.ElementAt(0).Id, 
+                        Windows.Storage.FileAccessMode.ReadWrite);
                 }
                 catch (Exception e0)
                 {
-                    string message = "An exception of type " + e0.GetType().ToString() + " occurred." +
-                        " Exception occurred at : " + Environment.StackTrace + ". Exception message is : " + e0.Message;
-                    hidLogger.QueueMessage(hidLogger.BuildMessage(moduleName, methodName, message));
+                    LogMessage(e0.Message + e0.StackTrace);
                 }
 
-                if (device != null)
+                if (_device != null)
                 {
-                    deviceIsEnumerated = true;
-                    device.InputReportReceived += new TypedEventHandler<HidDevice, HidInputReportReceivedEventArgs>(USBInterruptTransferHandler);
-                    hidLogger.QueueMessage(hidLogger.BuildMessage(moduleName, methodName, "Motus-1 enumeration success!"));
+                    _deviceIsEnumerated = true;
+                    _device.InputReportReceived += new TypedEventHandler<HidDevice, 
+                        HidInputReportReceivedEventArgs>(USBInterruptTransferHandler);
+                    LogMessage("Motus-1 enumeration success!");
                 }
                 else
                 {
-                    hidLogger.QueueMessage(hidLogger.BuildMessage(moduleName, methodName, "Motus-1 enumeration failure."));
+                    LogMessage("Motus-1 enumeration failure.");
                 }
             }
         }
 
-        public static void DisposeDevice()
+        public  void DisposeDevice()
         {
-            deviceIsEnumerated = false;
-            device.Dispose();
+            _deviceIsEnumerated = false;
+            _device.Dispose();
         }
 
-        private static void GetHidReport(HidInputReportReceivedEventArgs args)
+        private  void GetHidReport(HidInputReportReceivedEventArgs args)
         {
             // For now there is only one data type
-            string methodName = "GetHidReport";
             HidInputReport rpt = args.Report;
             IBuffer buff = rpt.Data;
             DataReader dr = DataReader.FromBuffer(buff);
@@ -128,41 +116,34 @@ namespace Server_App_CSharp
                 for (int i = 0; i < parsed.Length; i++)
                     parsed[i] = bytes[i + 1];
                 packet.Serialize(parsed);
-                DataStorageTable.SetCurrentMotus1RawData(packet);
+                byte[] stream = new byte[packet.ExpectedLen + DataPacket.NumOverHeadBytes];
+                packet.SerializeToStream(stream, 0);
+                SetData(stream);
             }
             catch (ArgumentException e0)
             {
-                string msg = e0.Message + e0.StackTrace;
-                hidLogger.QueueMessage(hidLogger.BuildMessage(moduleName, methodName,
-                    msg));
+                LogMessage(e0.Message + e0.StackTrace);
             }
             catch (IndexOutOfRangeException e1)
             {
-                string msg = e1.Message + e1.StackTrace;
-                hidLogger.QueueMessage(hidLogger.BuildMessage(moduleName, methodName,
-                    msg));
+                LogMessage(e1.Message + e1.StackTrace);
             }
         }
 
-        private static void USBInterruptTransferHandler(HidDevice sender, 
+        private  void USBInterruptTransferHandler(HidDevice sender, 
             HidInputReportReceivedEventArgs args)
         {
             GetHidReport(args);
-            if (Logger.IsLoggingRawData())
-            {
-                Motus_1_RawDataPacket packet = DataStorageTable.GetCurrentMotus1RawData();
-                Logger.LogRawData(packet.ToString());
-            }
-        }
-
-        public static TraceLoggerMessage[] GetTraceMessages()
-        {
-            return hidLogger.GetAllMessages();
-        }
-
-        public static bool HasTraceMessages()
-        {
-            return hidLogger.HasMessages();
+            //if (Logger.IsLoggingRawData())
+            //{
+            //    lock (_lock)
+            //    {
+            //        DataPacket p = _dataQueue.Get();
+            //        _dataQueue.Add(p);
+            //        Motus_1_RawDataPacket packet = new Motus_1_RawDataPacket(p);
+            //        Logger.LogRawData(packet.ToString());
+            //    }
+            //}
         }
     }
 }

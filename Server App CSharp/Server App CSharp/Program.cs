@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Threading;
 using VMUV_TCP_CSharp;
 using Comms_Protocol_CSharp;
@@ -9,10 +8,8 @@ namespace Server_App_CSharp
 {
     class Program
     {
-        private static string version = "1.0.0.8";
-        private static HardwareStates hwState = HardwareStates.find_device;
-        private static SocketWrapper tcpServer = new SocketWrapper(Configuration.server);
-        private static int devicePollCounter = 0;
+        private static string _version = "1.0.1.0";
+        private static DataQueue _queue = new DataQueue();
 
         static void Main(string[] args)
         {
@@ -23,15 +20,29 @@ namespace Server_App_CSharp
                 if (mutex.WaitOne(0, false))
                 {
                     Initialize();
+
+                    BTWorker btWorker = new BTWorker();
+                    MotusWorker motusWorker = new MotusWorker();
+                    SocketWrapper tcpServer = new SocketWrapper(Configuration.server);
+
                     tcpServer.StartServer();
 
                     while (true)
                     {
-                        Motus1HardwareMain();
-                        Motus_1_RawDataPacket packet = DataStorageTable.GetCurrentMotus1RawData();
-                        tcpServer.ServerSetTxData(packet.Payload, (byte)packet.Type);
-                        ServiceLoggingRequests();
-                        Thread.Sleep(2);
+                        if (btWorker.GetState() == ThreadState.Stopped)
+                            btWorker.Start();
+                        else if (btWorker.HasData())
+                            btWorker.GetData(_queue);
+
+                        if (motusWorker.GetState() == ThreadState.Stopped)
+                            motusWorker.Start();
+                        else if (motusWorker.HasData())
+                            motusWorker.GetData(_queue);
+
+                        if (!_queue.IsEmpty())
+                            tcpServer.ServerSetTxData(_queue);
+
+                        Thread.Sleep(4);
                     }
                 }       
             }
@@ -49,108 +60,18 @@ namespace Server_App_CSharp
 
         static void Initialize()
         {
+            Logger.PrintToConsole = true;
             string startTime = DateTime.Now.ToString("h:mm:ss tt");
             Logger.CreateLogFile();
-            Logger.LogMessage("Motus-1 Pipe Server version: " + version);
+            Logger.LogMessage("Motus-1 Pipe Server version: " + _version);
             Logger.LogMessage("Motus-1 Pipe Server started at " + startTime);
             Logger.LogMessage("VMUV_TCP version: " + SocketWrapper.version);
-        }
-
-        static void Motus1HardwareMain()
-        {
-            switch (hwState)
-            {
-                case HardwareStates.find_device:
-                    Thread.Sleep(1000);
-                    FindDevice();
-
-                    if (HIDInterface.DeviceIsPresent())
-                        hwState = HardwareStates.enumerate_device;
-                    break;
-                case HardwareStates.enumerate_device:
-                    EnumerateDevice();
-
-                    if (HIDInterface.DeviceIsEnumerated())
-                        hwState = HardwareStates.device_enumerated;
-                    else
-                        hwState = HardwareStates.find_device;
-                    break;
-                case HardwareStates.device_enumerated:
-                    if (devicePollCounter++ > 1000)
-                    {
-                        devicePollCounter = 0;
-                        PollDevice();
-                    }
-
-                    if (!HIDInterface.DeviceIsPresent())
-                    {
-                        HIDInterface.DisposeDevice();
-                        hwState = HardwareStates.find_device;
-                    }
-                    break;
-            }
-        }
-
-        static void FindDevice()
-        {
-            Task.Run(async () =>
-            {
-                await HIDInterface.FindDevice();
-            }).GetAwaiter().GetResult();
-        }
-
-        static void PollDevice()
-        {
-            Task.Run(async () =>
-            {
-                await HIDInterface.PollDevice();
-            }).GetAwaiter().GetResult();
-        }
-
-        static void EnumerateDevice()
-        {
-            Task.Run(async () =>
-            {
-                await HIDInterface.EnumerateDevice();
-            }).GetAwaiter().GetResult();
         }
 
         static void TakeDown()
         {
             string endTime = DateTime.Now.ToString("h:mm:ss tt");
             Logger.LogMessage("Motus-1 Pipe Server ended at " + endTime);
-        }
-
-        static void ServiceLoggingRequests()
-        {
-            if (HIDInterface.HasTraceMessages())
-            {
-                TraceLoggerMessage[] msgs = HIDInterface.GetTraceMessages();
-                string[] strMsg = new string[msgs.Length];
-
-                for (int i = 0; i < msgs.Length; i++)
-                    strMsg[i] = TraceLogger.TraceLoggerMessageToString(msgs[i]);
-
-                Logger.LogMessage(strMsg);
-            }
-
-            if (tcpServer.HasTraceMessages())
-            {
-                TraceLoggerMessage[] msgs = tcpServer.GetTraceMessages();
-                string[] strMsg = new string[msgs.Length];
-
-                for (int i = 0; i < msgs.Length; i++)
-                    strMsg[i] = TraceLogger.TraceLoggerMessageToString(msgs[i]);
-
-                Logger.LogMessage(strMsg);
-            }
-        }
-
-        public enum HardwareStates
-        {
-            find_device,
-            enumerate_device,
-            device_enumerated
         }
     }
 }
