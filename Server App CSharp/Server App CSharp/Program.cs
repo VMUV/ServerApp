@@ -19,6 +19,8 @@ namespace Server_App_CSharp
                 mutex = new Mutex(false, "3fb63999603824ebd0b416f74e96505023cfcd41");
                 if (mutex.WaitOne(0, false))
                 {
+                    Initialize();
+
                     BTWorker btWorker = new BTWorker();
                     MotusWorker motusWorker = new MotusWorker();
                     SocketWrapper tcpServer = new SocketWrapper(Configuration.server);
@@ -56,6 +58,7 @@ namespace Server_App_CSharp
 
         static void Initialize()
         {
+            Logger.PrintToConsole = true;
             string startTime = DateTime.Now.ToString("h:mm:ss tt");
             Logger.CreateLogFile();
             Logger.LogMessage("Motus-1 Pipe Server version: " + _version);
@@ -67,31 +70,6 @@ namespace Server_App_CSharp
         {
             string endTime = DateTime.Now.ToString("h:mm:ss tt");
             Logger.LogMessage("Motus-1 Pipe Server ended at " + endTime);
-        }
-
-        static void ServiceLoggingRequests()
-        {
-            //if (HIDInterface.HasTraceMessages())
-            //{
-            //    TraceLoggerMessage[] msgs = HIDInterface.GetTraceMessages();
-            //    string[] strMsg = new string[msgs.Length];
-
-            //    for (int i = 0; i < msgs.Length; i++)
-            //        strMsg[i] = TraceLogger.TraceLoggerMessageToString(msgs[i]);
-
-            //    Logger.LogMessage(strMsg);
-            //}
-
-            //if (_tcpServer.HasTraceMessages())
-            //{
-            //    TraceLoggerMessage[] msgs = _tcpServer.GetTraceMessages();
-            //    string[] strMsg = new string[msgs.Length];
-
-            //    for (int i = 0; i < msgs.Length; i++)
-            //        strMsg[i] = TraceLogger.TraceLoggerMessageToString(msgs[i]);
-
-            //    Logger.LogMessage(strMsg);
-            //}
         }
     }
 }

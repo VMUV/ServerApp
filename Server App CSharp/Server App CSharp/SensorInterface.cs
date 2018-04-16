@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Threading;
 using Comms_Protocol_CSharp;
-using Trace_Logger_CSharp;
 
 namespace Server_App_CSharp
 {
-    public class SensorInterface
+    public class SensorInterface : Loggable
     {
         private DataQueue _queue = new DataQueue();
-        private TraceLogger _logger = new TraceLogger();
         private Object _lock = new Object();
         private Thread _thread = null;
 
@@ -16,20 +14,6 @@ namespace Server_App_CSharp
         {
             bool rtn = false;
             lock (_lock) { rtn = !_queue.IsEmpty(); }
-            return rtn;
-        }
-
-        public bool HasLogs()
-        {
-            bool rtn = false;
-            lock (_lock) { rtn = _logger.HasMessages() };
-            return rtn;
-        }
-
-        public TraceLoggerMessage[] GetLogs()
-        {
-            TraceLoggerMessage[] rtn = new TraceLoggerMessage[0];
-            lock (_lock) { rtn = _logger.GetAllMessages(); }
             return rtn;
         }
 
@@ -79,14 +63,6 @@ namespace Server_App_CSharp
             lock (_lock)
             {
                 _queue.ParseStreamable(data, data.Length);
-            }
-        }
-
-        protected void SetLog(TraceLoggerMessage msg)
-        {
-            lock (_lock)
-            {
-                _logger.QueueMessage(msg);
             }
         }
     }

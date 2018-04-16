@@ -6,7 +6,7 @@ using InTheHand.Net.Bluetooth;
 
 namespace Server_App_CSharp
 {
-    class BTClient
+    class BTClient : Loggable
     {
         private BluetoothClient _client;
         private BluetoothDeviceInfo[] _devices;
@@ -30,7 +30,7 @@ namespace Server_App_CSharp
             BluetoothRadio radio = BluetoothRadio.PrimaryRadio;
             if (radio == null)
             {
-                // TODO: No radio found we need to report an error in the logs
+                LogMessage("No radio present, cannot launch Bluetooth client.");
                 _state = BTStates.start_radio;
                 return;
             }
@@ -53,7 +53,7 @@ namespace Server_App_CSharp
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.GetType() + ": " + e.Message);
+                LogMessage(e.GetType() + ": " + e.Message);
                 _state = BTStates.disconnected;
             }
         }
@@ -68,7 +68,7 @@ namespace Server_App_CSharp
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.GetType() + ": " + e.Message);
+                LogMessage(e.GetType() + ": " + e.Message);
                 _state = BTStates.find_connected_devices;
             }
         }
@@ -84,7 +84,7 @@ namespace Server_App_CSharp
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.GetType() + ": " + e.Message);
+                LogMessage(e.GetType() + ": " + e.Message);
                 _state = BTStates.disconnected;
             }
         }
@@ -109,7 +109,7 @@ namespace Server_App_CSharp
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.GetType() + ": " + e.Message);
+                LogMessage(e.GetType() + ": " + e.Message);
                 TimeOutIncrement();
             }
 
@@ -138,22 +138,22 @@ namespace Server_App_CSharp
                     break;
                 case BTStates.find_connected_devices:
                     {
-                        Console.WriteLine("Searching for connected devices..");
+                        LogMessage("Searching for connected devices..");
                         LookForConnectedDevices();
                     }
                     break;
                 case BTStates.connect_to_service:
                     {
-                        Console.WriteLine("Found " + _devices.Length + " devices");
+                        LogMessage("Found " + _devices.Length + " devices");
                         if (_devices.Length > 0)
-                            Console.Write("Attempting to connect to " + _devices[_deviceIndex].DeviceName +
+                            LogMessage("Attempting to connect to " + _devices[_deviceIndex].DeviceName +
                                 " with service " + _service.ToString());
                         ConnectToService();
                     }
                     break;
                 case BTStates.connected_to_service:
                     {
-                        Console.WriteLine("Connected to service " + _service.ToString());
+                        LogMessage("Connected to service " + _service.ToString());
                         InitStream();
                     }
                     break;
@@ -164,7 +164,7 @@ namespace Server_App_CSharp
                     break;
                 case BTStates.disconnected:
                     {
-                        Console.WriteLine("Disconnecting");
+                        LogMessage("Disconnecting");
                         if (_streamIn != null)
                             _streamIn.Dispose();
                         if (_client != null)
