@@ -8,7 +8,7 @@ namespace Server_App_CSharp
 {
     class Program
     {
-        private static string _version = "1.0.1.0";
+        private static string _version = "1.0.2.1";
         private static DataQueue _queue = new DataQueue();
 
         static void Main(string[] args)
