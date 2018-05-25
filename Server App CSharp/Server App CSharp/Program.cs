@@ -1,4 +1,4 @@
-﻿#define LOG_RAW_DATA
+﻿//#define LOG_RAW_DATA
 
 using System;
 using System.Threading;

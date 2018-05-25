@@ -64,19 +64,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_DBF2A9F68179B450BA866C4C138CB947"
+        "OwnerKey" = "8:_EA655939C401B1852BC6BD96C76E26C8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_9BCC156D05A44227BD0D658BF70523C3"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_EA655939C401B1852BC6BD96C76E26C8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -95,6 +89,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_2DEF732EDD9450774371B925037CCE41"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_DBF2A9F68179B450BA866C4C138CB947"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -227,7 +227,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:VMUV TCP CSharp _NET_4_6_1, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:VMUV TCP CSharp _NET_4_6_1, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_44A9D41202206D99B387AD0C32DC5A1C"
@@ -289,7 +289,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Motus Hardware Interface, Version=1.0.2.1, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Motus Hardware Interface, Version=1.0.2.2, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_9BCC156D05A44227BD0D658BF70523C3"
@@ -320,7 +320,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Comms Protocol CSharp _NET_4_6_1, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Comms Protocol CSharp _NET_4_6_1, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_DBF2A9F68179B450BA866C4C138CB947"
@@ -434,15 +434,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Motus"
-        "ProductCode" = "8:{5A8BA88E-3BCA-47D9-80A2-89B240C49FCA}"
-        "PackageCode" = "8:{400C0018-4CDB-4A3F-8066-041F5E922E63}"
+        "ProductCode" = "8:{507F29EA-EF35-4BBD-8A45-6D2EC05C78F2}"
+        "PackageCode" = "8:{E96B31A8-2115-4EFB-96C1-794A794BF18C}"
         "UpgradeCode" = "8:{10B62C46-F921-4397-A3C6-ED34A76E8469}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.2"
+        "ProductVersion" = "8:1.0.3"
         "Manufacturer" = "8:VMUV LLC"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
