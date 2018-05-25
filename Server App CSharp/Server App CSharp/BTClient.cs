@@ -114,7 +114,7 @@ namespace Server_App_CSharp
             }
 
             // TODO: variable timeout period?
-            if (_timeOutInMs > 5000)
+            if (_timeOutInMs > 10000)
                 _state = BTStates.disconnected;
         }
 

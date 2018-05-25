@@ -26,7 +26,7 @@ namespace Server_App_CSharp
                 if (client.HasData)
                     SetData(client.GetData());
 
-                Thread.Sleep(5);
+                Thread.Sleep(4);
             }
         }
     }

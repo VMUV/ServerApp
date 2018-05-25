@@ -27,13 +27,13 @@ namespace Server_App_CSharp
                 string quatHeader = "x,y,z,w";
                 string motusHeader = "sample,pad0,pad1,pad2,pad3,pad4,pad5,pad6,pad7,pad8";
 
-                System.IO.File.WriteAllText(_accelFile, tStamp + xyzHeader);
-                System.IO.File.WriteAllText(_gyroFile, tStamp + xyzHeader);
-                System.IO.File.WriteAllText(_linearAccelFile, tStamp + xyzHeader);
-                System.IO.File.WriteAllText(_rotationVectorFile, tStamp + quatHeader);
-                System.IO.File.WriteAllText(_motusFile, motusHeader);
-                System.IO.File.WriteAllText(_pose6DOFFile, tStamp + quatHeader + "," + xyzHeader + "," + quatHeader + "," + xyzHeader + ",sample");
-                System.IO.File.WriteAllText(_stepFile, tStamp + "steps");
+                System.IO.File.WriteAllText(_accelFile, tStamp + xyzHeader + "\n");
+                System.IO.File.WriteAllText(_gyroFile, tStamp + xyzHeader + "\n");
+                System.IO.File.WriteAllText(_linearAccelFile, tStamp + xyzHeader + "\n");
+                System.IO.File.WriteAllText(_rotationVectorFile, tStamp + quatHeader + "\n");
+                System.IO.File.WriteAllText(_motusFile, motusHeader + "\n");
+                System.IO.File.WriteAllText(_pose6DOFFile, tStamp + quatHeader + "," + xyzHeader + "," + quatHeader + "," + xyzHeader + ",sample\n");
+                System.IO.File.WriteAllText(_stepFile, tStamp + "steps\n");
             }
             catch (System.IO.IOException) { }
             catch (Exception) { }
@@ -41,7 +41,7 @@ namespace Server_App_CSharp
         
         public static void SetLogData(byte[] rawData)
         {
-            DataQueue queue = new DataQueue(256);
+            DataQueue queue = new DataQueue(1024);
             queue.ParseStreamable(rawData, rawData.Length);
 
             while (!queue.IsEmpty())
